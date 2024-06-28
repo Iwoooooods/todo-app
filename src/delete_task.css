@@ -1,0 +1,15 @@
+.delete-button{
+    position: absolute; /* 绝对定位叉号 */
+    width: 50px;
+    height: 50px;
+    top: 0px;
+    right: 0px; /* 距左边5px */
+    cursor: pointer; /* 鼠标悬停时显示指针手势 */
+    color: rgb(94, 94, 94); /* 设置叉号颜色 */
+    background-color: rgba(255, 0, 0, 0);
+    border: none;
+}
+
+.delete-button:hover {
+    transform: scale(1.1);
+  }

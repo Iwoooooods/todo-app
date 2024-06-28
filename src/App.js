@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import TaskList from "./TaskList";
+import TaskForm from "./TaskForm";
 
-function App() {
+export default function App() {
+  const [tasks, setTasks] = useState([]);
+  async function fetchTasks() {
+    const resp = await fetch(`http://127.0.0.1:8080/api/tasks/home?user_id=1`);
+    const result = await resp.json();
+    setTasks(result.data.tasks);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <TaskList tasks={tasks} fetchTasks={fetchTasks} />
+      <TaskForm fetchTasks={fetchTasks} />
+    </>
   );
 }
-
-export default App;
