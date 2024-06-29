@@ -1,14 +1,15 @@
 import { useState } from "react";
-import "./task.css"; // 确保这个路径是正确的
-import TaskDetail from "./TaskDetail";
+import "./task.css"; 
+import TaskDetail from "./DetailComponent/TaskDetail";
 import { format } from 'date-fns';
-import TaskDeleteButton from "./TaskDelete";
+import TaskDeleteButton from "./DeleteComponent/TaskDelete";
 
 export default function Task({ task, fetchTasks, setCurrentTask, setShowConfirm }) {
   const [showDetail, setShowDetail] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleToggleDetail = () => {
-    setShowDetail((prev) => !prev);
+    setShowDetail(!showDetail);
   };
 
   const calculateTimeLeft = () => {
@@ -32,7 +33,7 @@ export default function Task({ task, fetchTasks, setCurrentTask, setShowConfirm 
   //   console.log(task.content);
   return (
     <>
-      <div className="task-container" onClick={handleToggleDetail}>
+      <div className="task-container">
         <TaskDeleteButton 
           task={task} 
           fetchTasks={fetchTasks} 
@@ -41,10 +42,10 @@ export default function Task({ task, fetchTasks, setCurrentTask, setShowConfirm 
         />
         <span className="task-title">{task.title}</span>
         {task.deadline && (
-          <span className={deadlineClass}>Deadline: {format(new Date(task.deadline), 
-                                                      'yyyy-MM-dd')}</span>
+          <span className={deadlineClass}>Deadline: {format(new Date(task.deadline), 'yyyy-MM-dd')}</span>
         )}
-        <TaskDetail task={task} showDetail={showDetail} />
+        <TaskDetail task={task} showDetail={showDetail}  onClick={handleToggleDetail} />
+        <div>{task.is_completed ? "completed" : "not completed"}</div>
       </div>
     </>
   );

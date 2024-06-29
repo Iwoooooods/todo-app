@@ -1,3 +1,4 @@
 button:active{
     transform: scale(0.975);
+    cursor: pointer;
 }

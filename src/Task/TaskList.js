@@ -1,6 +1,6 @@
 import Task from "./Task";
 import { useEffect, useState } from "react";
-import ConfirmDialog from "./ConfirmDialog";
+import ConfirmDialog from "../Components/ConfirmDialog";
 
 export default function TaskList({ fetchTasks, tasks }) {
   const [currentTask, setCurrentTask] = useState({});

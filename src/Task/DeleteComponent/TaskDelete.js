@@ -1,5 +1,3 @@
-import { useState } from "react";
-import ConfirmDialog from './ConfirmDialog';
 import './delete_task.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
