@@ -1,9 +1,0 @@
-.task-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease-in-out;
-  }
-  
-.task-content.open {
-    max-height:fit-content; /* Adjust based on your content size */
-}

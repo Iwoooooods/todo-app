@@ -11,7 +11,6 @@ export default function TaskDeleteButton({task, setCurrentTask, setShowConfirm})
 
     return (
     <div>
-        <div></div>
         <button onClick={()=>confirmDelete()} className="delete-button">
             <FontAwesomeIcon icon={faTimes} style={{width:'40px', height:'40px'}} />
         </button>

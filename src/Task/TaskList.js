@@ -36,9 +36,9 @@ export default function TaskList({ fetchTasks, tasks }) {
         <Task
           key={task.id}
           task={task}
-          fetchTasks={fetchTasks}
-          setCurrentTask={setCurrentTask}
           setShowConfirm={setShowConfirm}
+          deleteCurrentTask={setCurrentTask}
+          fetchTasks={fetchTasks}
         />
       ))}
     </div>
