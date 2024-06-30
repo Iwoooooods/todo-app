@@ -8,8 +8,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
   const [showDetail, setShowDetail] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentTask, setCurrentTask] = useState(task);
-  const [titleWidth, setTitleWidth] = useState(Math.max(currentTask.title.length, 1) * 20);
-
+  const [titleWidth, setTitleWidth] = useState(Math.max(currentTask.title.length, 1) * pxPerChar);
   const handleToggleDetail = (e) => {
     e.preventDefault();
     setShowDetail(!showDetail);
@@ -27,11 +26,40 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
     }
   };
 
+  const handleCheckboxChange = async (e) => {
+
+    setCurrentTask((prevState) => ({
+      ...prevState,
+      is_completed: e.target.checked,
+    }))
+    const url = `http://127.0.0.1:8080/api/tasks/task_update/${currentTask.id}`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({is_completed: e.target.checked}),
+    };
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      if (result.code == 200) {
+        fetchTasks();
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Submit error:", error);
+    }
+  }
+
   const handleDoubleClick = () => {
     setIsEditing(true);
   }
 
-  const handleBlur = (e) => {
+  const handleBlur = async (e) => {
     const {name, value} = e.target
     setCurrentTask((prevState) => ({
       ...prevState,
@@ -40,14 +68,17 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
     if (name === 'title'){
       setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
     }
-    handleUpdate(e)
+    await handleUpdate()
     setIsEditing(false);
+    if (name === 'content'){
+      setShowDetail(false);
+    }
   }
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = async (e) => {
     if (e.key === 'Enter'){
       //提交修改请求
-      handleUpdate(e)
+      await handleUpdate()
       setIsEditing(false);
       const name = e.target.name;
       if (name === 'title'){
@@ -110,11 +141,11 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
   }
   //   console.log(task.content);
 
-  useEffect(() => {
-    if(currentTask && currentTask.id !== undefined){
-      handleUpdate();
-    }
-  }, [currentTask.is_completed]);
+  // useEffect( () => {
+  //   if(currentTask && currentTask.id !== undefined){
+  //     handleUpdate();
+  //   }
+  // }, [currentTask.is_completed]);
 
   return (
     <>
@@ -124,7 +155,8 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
           setCurrentTask={deleteCurrentTask} 
           setShowConfirm={setShowConfirm}
         />
-        <form onSubmit={handleUpdate}>
+        {/* <form onSubmit={handleUpdate}> */}
+        <form>
           <input 
             className="task-title"
             name="title"
@@ -181,15 +213,15 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
             name="is_completed"
             type="checkbox"
             checked={currentTask.is_completed}
-            onChange={(e) => {
-              setIsEditing(true);
-              setCurrentTask((prevState) => 
-                ({...prevState, is_completed: e.target.checked})
-              );
-              
-          }}
+          //   onChange={async (e) => {
+          //     // setIsEditing(true);
+          //     setCurrentTask((prevState) => 
+          //       ({...prevState, is_completed: e.target.checked})
+          //     );
+          // }}
+            onChange={handleCheckboxChange}
           />
-          <span>{task.is_completed ? "completed" : "not yet completed"}</span>
+          <span>{currentTask.is_completed ? "completed" : "not yet completed"}</span>
         </form>
       </div>
     </>
