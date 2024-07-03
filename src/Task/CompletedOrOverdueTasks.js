@@ -1,14 +1,15 @@
 import Task from "./Task";
 import { useEffect, useState } from "react";
 import ConfirmDialog from "../Components/ConfirmDialog";
+import './completed_or_overdue.css'
 import { API_DOMAIN } from "../consts";
 
-export default function TaskList({ fetcheInprocessTasks, fetcheCompletedOrOverdueTasks, tasks }) {
+export default function CompletedOrOverdueTasks({ fetcheInprocessTasks, fetcheCompletedOrOverdueTasks, tasks }) {
   const [currentTask, setCurrentTask] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    fetcheInprocessTasks();
+    fetcheCompletedOrOverdueTasks();
   }, []);
 
   const handleDelete = async ()=>{
@@ -17,9 +18,9 @@ export default function TaskList({ fetcheInprocessTasks, fetcheCompletedOrOverdu
             {method: 'DELETE',}
         );
         const result = await resp.json();
-        if (result.code === 200){
+        if (result.code == 200){
             console.log("Delete successfully:", result);
-            fetcheInprocessTasks();
+            fetcheCompletedOrOverdueTasks();
         }
     }catch (error){
         console.error('Error:',error);
@@ -29,7 +30,7 @@ export default function TaskList({ fetcheInprocessTasks, fetcheCompletedOrOverdu
   }
 
   return (
-    <div>
+    <div className="completed-or-overdue-tasks">
       <ConfirmDialog onCancel={() => setShowConfirm(false)} onConfirm={handleDelete} isOpen={showConfirm}>
         <p>Are you sure you want to delete this task?</p>
       </ConfirmDialog>

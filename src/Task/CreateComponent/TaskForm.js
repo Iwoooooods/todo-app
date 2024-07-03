@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./task_form.css";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
+import { API_DOMAIN } from "../../consts";
 
 export default function TaskForm({ fetchTasks }) {
   const [showFrom, setShowForm] = useState(false);
@@ -22,7 +23,7 @@ export default function TaskForm({ fetchTasks }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const url = "http://127.0.0.1:8080/api/tasks/create_task";
+    const url = `${API_DOMAIN}/api/tasks/create_task`;
     const options = {
       method: "POST",
       headers: {

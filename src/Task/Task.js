@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import {TITLE_WIDTH_PERCHAR, API_DOMAIN} from '../consts';
 import "./task.css"; 
 import { format } from 'date-fns';
 import TaskDeleteButton from "./DeleteComponent/TaskDelete";
 
-export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTasks }) {
-  const pxPerChar = 20
+export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheInprocessTasks, fetcheCompletedOrOverdueTasks }) {
+  const pxPerChar = TITLE_WIDTH_PERCHAR
   const [showDetail, setShowDetail] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [currentTask, setCurrentTask] = useState(task);
@@ -32,7 +33,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
       ...prevState,
       is_completed: e.target.checked,
     }))
-    const url = `http://127.0.0.1:8080/api/tasks/task_update/${currentTask.id}`;
+    const url = `${API_DOMAIN}/api/tasks/task_update/${currentTask.id}`;
     const options = {
       method: "PUT",
       headers: {
@@ -46,8 +47,10 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      if (result.code == 200) {
-        fetchTasks();
+      if (result.code === 200) {
+        // console.log(currentTask);
+        await fetcheInprocessTasks();
+        await fetcheCompletedOrOverdueTasks();
         setIsEditing(false);
       }
     } catch (error) {
@@ -76,29 +79,31 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
   }
 
   const handleKeyDown = async (e) => {
-    if (e.key === 'Enter'){
-      //提交修改请求
-      await handleUpdate()
-      setIsEditing(false);
-      const name = e.target.name;
-      if (name === 'title'){
-        setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
-      } 
-    }else if (e.key === 'Escape'){
-      const name = e.target.name
-      setCurrentTask((prevState) => ({
-        ...prevState,
-        [name]: task[name]
-      }))
-      setIsEditing(false);
-      if (name === 'title'){
-        setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
+    if (isEditing){
+      if (e.key === 'Enter'){
+        //提交修改请求
+        await handleUpdate()
+        setIsEditing(false);
+        const name = e.target.name;
+        if (name === 'title'){
+          setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
+        } 
+      }else if (e.key === 'Escape'){
+        const name = e.target.name
+        setCurrentTask((prevState) => ({
+          ...prevState,
+          [name]: task[name]
+        }))
+        setIsEditing(false);
+        if (name === 'title'){
+          setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
+        }
       }
     }
   }
 
   const handleUpdate = async () => {
-    const url = `http://127.0.0.1:8080/api/tasks/task_update/${currentTask.id}`;
+    const url = `${API_DOMAIN}/api/tasks/task_update/${currentTask.id}`;
     const options = {
       method: "PUT",
       headers: {
@@ -113,7 +118,8 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetchTas
       }
       const result = await response.json();
       if (result.code == 200) {
-        fetchTasks();
+        fetcheInprocessTasks();
+        // fetcheCompletedOrOverdueTasks();
         setIsEditing(false);
       }
     } catch (error) {
