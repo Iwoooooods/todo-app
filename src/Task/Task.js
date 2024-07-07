@@ -1,6 +1,6 @@
 import { useState } from "react";
-import {TITLE_WIDTH_PERCHAR, API_DOMAIN} from '../consts';
-import "./task.css"; 
+import { TITLE_WIDTH_PERCHAR, API_DOMAIN } from '../consts';
+import "./task.css";
 import { format } from 'date-fns';
 import TaskDeleteButton from "./DeleteComponent/TaskDelete";
 
@@ -22,7 +22,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
       [name]: value,
       // title: "test",
     }));
-    if (name === 'title'){
+    if (name === 'title') {
       setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
     }
   };
@@ -39,7 +39,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({is_completed: e.target.checked}),
+      body: JSON.stringify({ is_completed: e.target.checked }),
     };
     try {
       const response = await fetch(url, options);
@@ -63,39 +63,39 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
   }
 
   const handleBlur = async (e) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setCurrentTask((prevState) => ({
       ...prevState,
       [name]: value
     }))
-    if (name === 'title'){
+    if (name === 'title') {
       setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
     }
     await handleUpdate()
     setIsEditing(false);
-    if (name === 'content'){
+    if (name === 'content') {
       setShowDetail(false);
     }
   }
 
   const handleKeyDown = async (e) => {
-    if (isEditing){
-      if (e.key === 'Enter'){
+    if (isEditing) {
+      if (e.key === 'Enter') {
         //提交修改请求
         await handleUpdate()
         setIsEditing(false);
         const name = e.target.name;
-        if (name === 'title'){
+        if (name === 'title') {
           setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
-        } 
-      }else if (e.key === 'Escape'){
+        }
+      } else if (e.key === 'Escape') {
         const name = e.target.name
         setCurrentTask((prevState) => ({
           ...prevState,
           [name]: task[name]
         }))
         setIsEditing(false);
-        if (name === 'title'){
+        if (name === 'title') {
           setTitleWidth(Math.max(currentTask.title.length, 1) * pxPerChar);
         }
       }
@@ -156,42 +156,42 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
   return (
     <>
       <div className="task-container">
-        <TaskDeleteButton 
-          task={currentTask} 
-          setCurrentTask={deleteCurrentTask} 
+        <TaskDeleteButton
+          task={currentTask}
+          setCurrentTask={deleteCurrentTask}
           setShowConfirm={setShowConfirm}
         />
         {/* <form onSubmit={handleUpdate}> */}
         <form>
-          <input 
+          <input
             className="task-title"
             name="title"
-            type="text" 
+            type="text"
             value={currentTask.title}
             readOnly={!isEditing}
             onChange={handleInputChange}
             onDoubleClick={handleDoubleClick}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            style={{width: `${titleWidth}px`}}
+            style={{ width: `${titleWidth}px` }}
           />
-          {task.deadline && 
-          <div className={deadlineClass}>
-            <span style={{display:'inline-block'}}>Deadline:</span>
-            <input 
-              name="deadline" 
-              type="date" 
-              value= {format(new Date(currentTask.deadline), 'yyyy-MM-dd')}
-              readOnly={!isEditing}
-              onChange={handleInputChange}
-              onClick={handleDoubleClick}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              style={{display: 'inline-block'}}
-          />
-          </div>
+          {task.deadline &&
+            <div className={deadlineClass}>
+              <span style={{ display: 'inline-block' }}>Deadline:</span>
+              <input
+                name="deadline"
+                type="date"
+                value={format(new Date(currentTask.deadline), 'yyyy-MM-dd')}
+                readOnly={!isEditing}
+                onChange={handleInputChange}
+                onClick={handleDoubleClick}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                style={{ display: 'inline-block' }}
+              />
+            </div>
           }
-          <input 
+          <input
             className="task-brief"
             name='brief'
             type='text'
@@ -201,10 +201,10 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
             onDoubleClick={handleDoubleClick}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-          /> 
-          <button onClick={handleToggleDetail} style={{backgroundColor:'rgba(255, 0, 0, 0)', border:'none', display: 'block', fontSize: '15px'}}>{showDetail?'▼ ':'▶ '}Content</button>
+          />
+          <button onClick={handleToggleDetail} style={{ backgroundColor: 'rgba(255, 0, 0, 0)', border: 'none', display: 'block', fontSize: '15px' }}>{showDetail ? '▼ ' : '▶ '}Content</button>
           <textarea
-            className={`task-content-${showDetail?"expanded":"collapsed"}`}
+            className={`task-content-${showDetail ? "expanded" : "collapsed"}`}
             name='content'
             readOnly={!isEditing}
             onChange={handleInputChange}
@@ -213,18 +213,18 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
           />
-          <p style={{height:"0px", margin:"0px", padding:"0px"}}></p>
-          <input 
+          <p style={{ height: "0px", margin: "0px", padding: "0px" }}></p>
+          <input
             className="task-completed"
             name="is_completed"
             type="checkbox"
             checked={currentTask.is_completed}
-          //   onChange={async (e) => {
-          //     // setIsEditing(true);
-          //     setCurrentTask((prevState) => 
-          //       ({...prevState, is_completed: e.target.checked})
-          //     );
-          // }}
+            //   onChange={async (e) => {
+            //     // setIsEditing(true);
+            //     setCurrentTask((prevState) => 
+            //       ({...prevState, is_completed: e.target.checked})
+            //     );
+            // }}
             onChange={handleCheckboxChange}
           />
           <span>{currentTask.is_completed ? "completed" : "not yet completed"}</span>
