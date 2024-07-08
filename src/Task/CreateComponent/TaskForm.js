@@ -1,16 +1,30 @@
 import { useState } from "react";
 import "./task_form.css";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { API_DOMAIN } from "../../consts";
 
 export default function TaskForm({ fetchTasks }) {
+  //showForm is used to control the display of the form
   const [showFrom, setShowForm] = useState(false);
+  //allowSubmit is used to control the opacity of the submit button
+  const [submitDisabled, setSubmitDisabled] = useState(false);
+  //task is used to store the data of the form
   const [task, setTask] = useState({
     user_id: 1,
     title: "",
     content: "",
   });
+  const allowSubmit = task.title.trim() === "" || task.content.trim() === "" || submitDisabled;
+
+  function openForm() {
+    setShowForm(true);
+    setTask({
+      user_id: 1,
+      title: "",
+      content: "",
+    });
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,7 +35,11 @@ export default function TaskForm({ fetchTasks }) {
   };
 
   const handleSubmit = async (e) => {
+    // prevent the default form submission
+    if (submitDisabled) { return; }
     e.preventDefault();
+    // disable the submit button to prevent multiple submissions
+    setSubmitDisabled(true);
 
     const url = `${API_DOMAIN}/api/tasks/create_task`;
     const options = {
@@ -37,25 +55,30 @@ export default function TaskForm({ fetchTasks }) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const result = await response.json();
-      if (result.code == 200) {
-        console.log("Submitted successfully:", result);
-        setShowForm(false);
+      if (result.code === 200) {
         fetchTasks();
+        setShowForm(false);
         setTask({
           user_id: 1,
           title: "",
           content: "",
         });
+        alert("Task created successfully");
       }
     } catch (error) {
-      console.error("Submit error:", error);
+      alert("Failed to create task");
+    } finally {
+      setSubmitDisabled(false);
+      // console.log(`submit finished: ${submitDisabled}`);
     }
   };
 
   return (
     <div>
-      {!showFrom && <button onClick={() => setShowForm(true)} id="add-button">
-        <FontAwesomeIcon icon={faPlus} />  
+      {!showFrom && <button onClick={() => {
+        openForm();
+      }} id="add-button">
+        <FontAwesomeIcon icon={faPlus} />
       </button>}
       {showFrom && (
         <form onSubmit={handleSubmit} className="form-container">
@@ -89,11 +112,11 @@ export default function TaskForm({ fetchTasks }) {
           />
           <button
             type="submit"
-            disabled={(task.title.trim() === "") | (task.content.trim() === "")}
-            id="submit-button"
-            style={{ opacity: (task.title.trim() === "") | (task.content.trim() === "") ? 0.5 : 1 }}
+            disabled={allowSubmit}
+            className={`submit-button ${allowSubmit ? "disabled" : ""}`}
+            style={{ opacity: allowSubmit ? 0.5 : 1 }}
           >
-            Submit
+            submit
           </button>
         </form>
       )}
