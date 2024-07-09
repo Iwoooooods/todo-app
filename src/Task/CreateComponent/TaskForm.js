@@ -63,10 +63,12 @@ export default function TaskForm({ fetchTasks }) {
           title: "",
           content: "",
         });
-        alert("Task created successfully");
+        alert(result.message);
+      } else {
+        alert(result.message);
       }
     } catch (error) {
-      alert("Failed to create task");
+      console.log(error);
     } finally {
       setSubmitDisabled(false);
       // console.log(`submit finished: ${submitDisabled}`);

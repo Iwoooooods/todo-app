@@ -11,20 +11,22 @@ export default function TaskList({ fetcheInprocessTasks, fetcheCompletedOrOverdu
     fetcheInprocessTasks();
   }, []);
 
-  const handleDelete = async ()=>{
-    try{
-        const resp = await fetch(`${API_DOMAIN}/api/tasks/delete_task/${currentTask.id}`,
-            {method: 'DELETE',}
-        );
-        const result = await resp.json();
-        if (result.code === 200){
-            console.log("Delete successfully:", result);
-            fetcheInprocessTasks();
-        }
-    }catch (error){
-        console.error('Error:',error);
-    }finally{
-        setShowConfirm(false);
+  const handleDelete = async () => {
+    try {
+      const resp = await fetch(`${API_DOMAIN}/api/tasks/delete_task/${currentTask.id}`,
+        { method: 'DELETE', }
+      );
+      const result = await resp.json();
+      if (result.code === 200) {
+        alert(result.message);
+        fetcheInprocessTasks();
+      } else {
+        alert(result.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    } finally {
+      setShowConfirm(false);
     }
   }
 
