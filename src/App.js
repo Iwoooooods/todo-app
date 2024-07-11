@@ -33,23 +33,31 @@ export default function App() {
     }
   }
   //render warning message if user's tasks' remaining time is less than 24 hours
-  useEffect(async () => {
-    try {
-      const resp = await fetch(`${API_DOMAIN}/api/tasks/...`);
-      const result = await resp.json();
-      if (result.code === 200 & result.warning_task_num > 0) {
-        setShowWarning(true);
-        setWarningTaskNum(result.warning_task_num);
-      }
-    } catch (error) {
+  useEffect(() => {
+    (async () => {
+        try {
+        const resp = await fetch(`${API_DOMAIN}/api/tasks/warning/1`);
+        // const resp = await fetch(`${API_DOMAIN}/api/tasks/{user_id}}`);
+        const result = await resp.json();
+        console.log(result);
 
-    }
+        if (result.code === 200 && result.data.warning_task_num > 0) {
+          setShowWarning(true);
+          setWarningTaskNum(result.data.warning_task_num);
+          console.log(showWarning);
+        }
+
+      } catch (error) {
+        console.error(error)
+      }
+    })()
+
   }, [])
 
 
   return (
     <>
-      <WarningDialog showWarning={showWarning} message={`There are ${warningTaskNum} tasks overdue today! Hurry up!!`} />
+      <WarningDialog showWarning={showWarning} setShowWarning={setShowWarning} message={`There are ${warningTaskNum} tasks overdue today! Hurry up!!`} />
       <TaskForm fetchTasks={fetcheInprocessTasks} />
       <TaskList tasks={inProcessTasks} fetcheInprocessTasks={fetcheInprocessTasks} fetcheCompletedOrOverdueTasks={fetcheCompletedOrOverdueTasks} />
       <CompletedOrOverdueTasks tasks={completedOrOverdueTasks} fetcheInprocessTasks={fetcheInprocessTasks} fetcheCompletedOrOverdueTasks={fetcheCompletedOrOverdueTasks} />

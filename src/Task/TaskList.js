@@ -13,7 +13,8 @@ export default function TaskList({ fetcheInprocessTasks, fetcheCompletedOrOverdu
 
   const handleDelete = async () => {
     try {
-      const resp = await fetch(`${API_DOMAIN}/api/tasks/delete_task/${currentTask.id}`,
+      // const resp = await fetch(`${API_DOMAIN}/api/tasks/delete_task?task_id=${currentTask.id}&user_id=${currentUser.id}`,
+      const resp = await fetch(`${API_DOMAIN}/api/tasks/delete_task?task_id=${currentTask.id}&user_id=1`,
         { method: 'DELETE', }
       );
       const result = await resp.json();

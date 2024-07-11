@@ -103,7 +103,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
   }
 
   const handleUpdate = async () => {
-    const url = `${API_DOMAIN}/api/tasks/task_update/${currentTask.id}`;
+    const url = `${API_DOMAIN}/api/tasks/task_update?task_id=${currentTask.id}&user_id=1`;
     const options = {
       method: "PUT",
       headers: {

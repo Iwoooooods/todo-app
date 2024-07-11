@@ -1,4 +1,4 @@
-.confirm-dialog {
+.dialog {
     position: fixed; /* 或 absolute，根据需要 */
     top: 50%;
     left: 50%;

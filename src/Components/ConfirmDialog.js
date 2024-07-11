@@ -1,4 +1,4 @@
-import './confirm_dialog.css'
+import './dialog.css'
 
 export default function ConfirmDialog({ onConfirm, onCancel, isOpen, children }) {
   if (!isOpen) {
@@ -7,7 +7,7 @@ export default function ConfirmDialog({ onConfirm, onCancel, isOpen, children })
     return (
       <>
         <div className="overlay"></div>
-        <div className="confirm-dialog">
+        <div className="confirm dialog">
           <div>{children}</div>
           <button onClick={onConfirm}>Confirm</button>
           <button onClick={onCancel}>Cancel</button>
