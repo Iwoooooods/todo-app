@@ -113,11 +113,8 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
     };
     try {
       const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
       const result = await response.json();
-      if (result.code == 200) {
+      if (result.code === 200) {
         fetcheInprocessTasks();
         // fetcheCompletedOrOverdueTasks();
         setIsEditing(false);
