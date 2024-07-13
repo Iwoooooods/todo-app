@@ -18,7 +18,7 @@ export default function CompletedOrOverdueTasks({ fetcheInprocessTasks, fetcheCo
             {method: 'DELETE',}
         );
         const result = await resp.json();
-        if (result.code == 200){
+        if (resp.status === 200){
             console.log("Delete successfully:", result);
             fetcheCompletedOrOverdueTasks();
         }

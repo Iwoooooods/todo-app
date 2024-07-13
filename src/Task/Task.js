@@ -33,7 +33,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
       ...prevState,
       is_completed: e.target.checked,
     }))
-    const url = `${API_DOMAIN}/api/tasks/task_update/${currentTask.id}`;
+    const url = `${API_DOMAIN}/api/tasks/task_done?task_id=${currentTask.id}&user_id=1`;
     const options = {
       method: "PUT",
       headers: {
@@ -43,11 +43,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
     };
     try {
       const response = await fetch(url, options);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
-      if (result.code === 200) {
+      if (response.status === 200) {
         // console.log(currentTask);
         await fetcheInprocessTasks();
         await fetcheCompletedOrOverdueTasks();
@@ -113,10 +109,8 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
     };
     try {
       const response = await fetch(url, options);
-      const result = await response.json();
-      if (result.code === 200) {
+      if (response.status === 200) {
         fetcheInprocessTasks();
-        // fetcheCompletedOrOverdueTasks();
         setIsEditing(false);
       }
     } catch (error) {
