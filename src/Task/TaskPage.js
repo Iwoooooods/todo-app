@@ -2,12 +2,11 @@ import {useEffect, useState} from "react";
 import TaskList from "./TaskList";
 import TaskForm from "./CreateComponent/TaskForm";
 import CompletedOrOverdueTasks from "./CompletedOrOverdueTasks";
-import {API_DOMAIN} from '../consts';
 import WarningDialog from "../Components/WarningDialog";
 import {useCurrentUser} from "../Context";
-import {Navigate} from "react-router-dom";
 
 export default function TaskPage() {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     const [inProcessTasks, setInProcessTasks] = useState([]);
     const [completedOrOverdueTasks, setCompletedOrOverdueTasks] = useState([])
     const [showWarning, setShowWarning] = useState(false);
@@ -16,7 +15,7 @@ export default function TaskPage() {
 
     async function fetcheInprocessTasks() {
         try {
-            const resp = await fetch(`${API_DOMAIN}/api/tasks/in_process/${currentUser.id}`)
+            const resp = await fetch(`${BASE_URL}/api/tasks/in_process/${currentUser.id}`)
             const tasks = await resp.json();
             if (resp.status === 200) {
                 setInProcessTasks(() => ([...tasks]));
@@ -28,7 +27,7 @@ export default function TaskPage() {
 
     async function fetcheCompletedOrOverdueTasks() {
         try {
-            const resp = await fetch(`${API_DOMAIN}/api/tasks/completed_or_overdue/${currentUser.id}`)
+            const resp = await fetch(`${BASE_URL}/api/tasks/completed_or_overdue/${currentUser.id}`)
             const tasks = await resp.json();
             if (resp.status === 200) {
                 setCompletedOrOverdueTasks(() => ([...tasks]));
@@ -39,7 +38,7 @@ export default function TaskPage() {
     }
     async function fetchWarningTaskNum() {
         try {
-                const resp = await fetch(`${API_DOMAIN}/api/tasks/warning/${currentUser.id}`);
+                const resp = await fetch(`${BASE_URL}/api/tasks/warning/${currentUser.id}`);
                 const result = await resp.json();
 
                 if (resp.status === 200 && result.warning_task_num > 0) {

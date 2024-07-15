@@ -1,14 +1,14 @@
 import {setToken} from "./Auth";
 import {useNavigate} from "react-router-dom";
 import {useState} from "react";
-import {API_DOMAIN} from "../consts";
 import "./login.css";
 
 export default function Hello() {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     const navigate = useNavigate();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    //check to see if the fields are not empty
+
     const handleLogin = async (event) => {
         event.preventDefault();
 
@@ -18,7 +18,7 @@ export default function Hello() {
             console.log(username);
             console.log(password);
 
-            const url = `${API_DOMAIN}/api/login/token`;
+            const url = `${BASE_URL}/api/login/token`;
             const headers = new Headers();
             headers.append('Content-Type', 'application/x-www-form-urlencoded');
 
@@ -32,7 +32,7 @@ export default function Hello() {
                 });
                 if (resp.status === 201) {
                     const result = await resp.json();
-                    setToken(result["access_token"]);
+                    setToken(result["token"]["access_token"]);
                     // setIsLoggedIn(true);
                     console.log(result)
                     navigate('/my_tasks', {replace: true});
@@ -51,12 +51,43 @@ export default function Hello() {
         }
 
     };
+    const handleRegister = async (event) => {
+        event.preventDefault();
+
+        if ((username === "") || (password === "")) {
+            alert("Username and password should not be empty!");
+        } else {
+            const url = `${BASE_URL}/api/login/register`;
+            const user = {
+                username: username,
+                password: password,
+            }
+            try {
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(user),
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+                if (resp.status === 201) {
+                    const result = await resp.json();
+                    console.log(result);
+                    alert("Registered");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+            setUsername("");
+            setPassword("");
+        }
+    }
 
     return (
         <div className="login-container">
             <h1>Welcome</h1>
             <div className="login-form-container">
-                <form className="login-form" onSubmit={handleLogin}>
+                <form className="login-form">
                     <label style={{marginRight: 10}}>Input Username</label>
                     <input
                         type="text"
@@ -71,8 +102,11 @@ export default function Hello() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button type="submit" className="login-submit">
+                    <button type="submit" className="login-button" onClick={handleLogin}>
                         Login
+                    </button>
+                    <button type="submit" className="register-button" onClick={handleRegister}>
+                        Register
                     </button>
                 </form>
             </div>

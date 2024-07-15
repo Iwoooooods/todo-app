@@ -2,11 +2,10 @@ import {useState} from "react";
 import "./task_form.css";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
-import {API_DOMAIN} from "../../consts";
 import {useCurrentUser} from "../../Context";
 
 export default function TaskForm({fetchTasks}) {
-    //showForm is used to control the display of the form
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     const [showFrom, setShowForm] = useState(false);
     //allowSubmit is used to control the opacity of the submit button
     const [submitDisabled, setSubmitDisabled] = useState(false);
@@ -44,7 +43,7 @@ export default function TaskForm({fetchTasks}) {
         // disable the submit button to prevent multiple submissions
         setSubmitDisabled(true);
 
-        const url = `${API_DOMAIN}/api/tasks/create_task`;
+        const url = `${BASE_URL}/api/tasks/create_task`;
         const options = {
             method: "POST",
             headers: {

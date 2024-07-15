@@ -1,17 +1,17 @@
 import Task from "./Task";
 import {useState} from "react";
 import ConfirmDialog from "../Components/ConfirmDialog";
-import {API_DOMAIN} from "../consts";
 import {useCurrentUser} from "../Context";
 
 export default function TaskList({fetcheInprocessTasks, fetcheCompletedOrOverdueTasks, tasks}) {
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
     const [currentTask, setCurrentTask] = useState({});
     const [showConfirm, setShowConfirm] = useState(false);
     const {currentUser} = useCurrentUser();
 
     const handleDelete = async () => {
         try {
-            const resp = await fetch(`${API_DOMAIN}/api/tasks/delete_task?task_id=${currentTask.id}&user_id=${currentUser.id}`,
+            const resp = await fetch(`${BASE_URL}/api/tasks/delete_task?task_id=${currentTask.id}&user_id=${currentUser.id}`,
                 {method: 'DELETE',}
             );
             console.log("Delete successfully:", resp);

@@ -1,16 +1,16 @@
 import Task from "./Task";
-import { useState } from "react";
+import {useState} from "react";
 import ConfirmDialog from "../Components/ConfirmDialog";
 import './completed_or_overdue.css'
-import { API_DOMAIN } from "../consts";
 
 export default function CompletedOrOverdueTasks({ fetcheInprocessTasks, fetcheCompletedOrOverdueTasks, tasks }) {
-  const [currentTask, setCurrentTask] = useState({});
-  const [showConfirm, setShowConfirm] = useState(false);
+    const BASE_URL = process.env.REACT_APP_BASE_URL;
+    const [currentTask, setCurrentTask] = useState({});
+    const [showConfirm, setShowConfirm] = useState(false);
 
   const handleDelete = async ()=>{
     try{
-        const resp = await fetch(`${API_DOMAIN}/api/tasks/delete_task/${currentTask.id}`,
+        const resp = await fetch(`${BASE_URL}/api/tasks/delete_task/${currentTask.id}`,
             {method: 'DELETE',}
         );
         const result = await resp.json();
