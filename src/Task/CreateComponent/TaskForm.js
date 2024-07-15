@@ -64,7 +64,7 @@ export default function TaskForm({fetchTasks}) {
                 });
                 alert("Create Successfully!");
             }else if (response.status === 400) {
-                alert(result.msg);
+                alert("Create Failed!");
             }
         } catch (error) {
             console.log(error);
@@ -107,7 +107,7 @@ export default function TaskForm({fetchTasks}) {
                     <input
                         type="date"
                         name="deadline"
-                        value={task.deadline}
+                        value={task["deadline"]}
                         onChange={handleInputChange}
                         placeholder="Deadline"
                     />

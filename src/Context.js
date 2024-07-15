@@ -14,7 +14,7 @@ export const UserContextProvider = ({children}) => {
             const resp = await fetch(url);
             if (resp.status === 200) {
                 const result = await resp.json();
-                setCurrentUser(result);
+                setCurrentUser(result["me"]);
             }else if (resp.status === 401) {
                 localStorage.removeItem("token");
                 setExpired(true);

@@ -16,8 +16,9 @@ export default function TaskPage() {
     async function fetcheInprocessTasks() {
         try {
             const resp = await fetch(`${BASE_URL}/api/tasks/in_process/${currentUser.id}`)
-            const tasks = await resp.json();
+            const result = await resp.json();
             if (resp.status === 200) {
+                const tasks = result["tasks"];
                 setInProcessTasks(() => ([...tasks]));
             }
         } catch (error) {
@@ -28,8 +29,9 @@ export default function TaskPage() {
     async function fetcheCompletedOrOverdueTasks() {
         try {
             const resp = await fetch(`${BASE_URL}/api/tasks/completed_or_overdue/${currentUser.id}`)
-            const tasks = await resp.json();
+            const result = await resp.json();
             if (resp.status === 200) {
+                const tasks = result["tasks"];
                 setCompletedOrOverdueTasks(() => ([...tasks]));
             }
         } catch (error) {
@@ -41,9 +43,9 @@ export default function TaskPage() {
                 const resp = await fetch(`${BASE_URL}/api/tasks/warning/${currentUser.id}`);
                 const result = await resp.json();
 
-                if (resp.status === 200 && result.warning_task_num > 0) {
+                if (resp.status === 200 && result["warning_task_num"] > 0) {
                     setShowWarning(true);
-                    setWarningTaskNum(result.warning_task_num);
+                    setWarningTaskNum(result["warning_task_num"]);
                 }
 
             } catch (error) {
