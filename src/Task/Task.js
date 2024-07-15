@@ -3,6 +3,7 @@ import { TITLE_WIDTH_PERCHAR, API_DOMAIN } from '../consts';
 import "./task.css";
 import { format } from 'date-fns';
 import TaskDeleteButton from "./DeleteComponent/TaskDelete";
+import {useCurrentUser} from "../Context";
 
 export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheInprocessTasks, fetcheCompletedOrOverdueTasks }) {
   const pxPerChar = TITLE_WIDTH_PERCHAR
@@ -10,6 +11,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
   const [isEditing, setIsEditing] = useState(false);
   const [currentTask, setCurrentTask] = useState(task);
   const [titleWidth, setTitleWidth] = useState(Math.max(currentTask.title.length, 1) * pxPerChar);
+  const {currentUser} = useCurrentUser()
   const handleToggleDetail = (e) => {
     e.preventDefault();
     setShowDetail(!showDetail);
@@ -33,7 +35,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
       ...prevState,
       is_completed: e.target.checked,
     }))
-    const url = `${API_DOMAIN}/api/tasks/task_done?task_id=${currentTask.id}&user_id=1`;
+    const url = `${API_DOMAIN}/api/tasks/task_done?task_id=${currentTask.id}&user_id=${currentUser.id}`;
     const options = {
       method: "PUT",
       headers: {
@@ -99,7 +101,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
   }
 
   const handleUpdate = async () => {
-    const url = `${API_DOMAIN}/api/tasks/task_update?task_id=${currentTask.id}&user_id=1`;
+    const url = `${API_DOMAIN}/api/tasks/task_update?task_id=${currentTask.id}&user_id=${currentUser.id}`;
     const options = {
       method: "PUT",
       headers: {
@@ -112,6 +114,9 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
       if (response.status === 200) {
         fetcheInprocessTasks();
         setIsEditing(false);
+      }else{
+        const result = await response.json();
+        alert(result["msg"]);
       }
     } catch (error) {
       console.error("Submit error:", error);
@@ -166,7 +171,7 @@ export default function Task({ task, setShowConfirm, deleteCurrentTask, fetcheIn
             onKeyDown={handleKeyDown}
             style={{ width: `${titleWidth}px` }}
           />
-          {task.deadline &&
+          {task["deadline"] &&
             <div className={deadlineClass}>
               <span style={{ display: 'inline-block' }}>Deadline:</span>
               <input

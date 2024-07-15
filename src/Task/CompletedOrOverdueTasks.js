@@ -1,5 +1,5 @@
 import Task from "./Task";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ConfirmDialog from "../Components/ConfirmDialog";
 import './completed_or_overdue.css'
 import { API_DOMAIN } from "../consts";
@@ -7,10 +7,6 @@ import { API_DOMAIN } from "../consts";
 export default function CompletedOrOverdueTasks({ fetcheInprocessTasks, fetcheCompletedOrOverdueTasks, tasks }) {
   const [currentTask, setCurrentTask] = useState({});
   const [showConfirm, setShowConfirm] = useState(false);
-
-  useEffect(() => {
-    fetcheCompletedOrOverdueTasks();
-  }, []);
 
   const handleDelete = async ()=>{
     try{

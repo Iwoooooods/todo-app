@@ -3,15 +3,16 @@ import "./task_form.css";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faMinus, faPlus} from '@fortawesome/free-solid-svg-icons';
 import {API_DOMAIN} from "../../consts";
+import {useCurrentUser} from "../../Context";
 
 export default function TaskForm({fetchTasks}) {
     //showForm is used to control the display of the form
     const [showFrom, setShowForm] = useState(false);
     //allowSubmit is used to control the opacity of the submit button
     const [submitDisabled, setSubmitDisabled] = useState(false);
+    const {currentUser} = useCurrentUser()
     //task is used to store the data of the form
     const [task, setTask] = useState({
-        user_id: 1,
         title: "",
         content: "",
     });
@@ -20,7 +21,7 @@ export default function TaskForm({fetchTasks}) {
     function openForm() {
         setShowForm(true);
         setTask({
-            user_id: 1,
+            user_id: currentUser.id,
             title: "",
             content: "",
         });
@@ -58,7 +59,7 @@ export default function TaskForm({fetchTasks}) {
                 fetchTasks();
                 setShowForm(false);
                 setTask({
-                    user_id: 1,
+                    user_id: currentUser.id,
                     title: "",
                     content: "",
                 });
